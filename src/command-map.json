@@ -1,69 +1,35 @@
 {
   "base": {
-    "ls": {
-      "windows": "dir",
-      "linux": "ls",
-      "darwin": "ls"
-    },
-    "cat": {
-      "windows": "type",
-      "linux": "cat",
-      "darwin": "cat"
-    },
-    "pwd": {
-      "windows": "cd",
-      "linux": "pwd",
-      "darwin": "pwd"
-    },
-    "rm": {
-      "windows": "del",
-      "linux": "rm",
-      "darwin": "rm"
-    },
-    "rm -rf": {
-      "windows": "rmdir /s /q",
-      "linux": "rm -rf",
-      "darwin": "rm -rf"
-    },
-    "cp": {
-      "windows": "copy",
-      "linux": "cp",
-      "darwin": "cp"
-    },
-    "mv": {
-      "windows": "move",
-      "linux": "mv",
-      "darwin": "mv"
-    },
-    "touch": {
-      "windows": "type nul >",
-      "linux": "touch",
-      "darwin": "touch"
-    },
-    "which": {
-      "windows": "where",
-      "linux": "which",
-      "darwin": "which"
-    },
-    "clear": {
-      "windows": "cls",
-      "linux": "clear",
-      "darwin": "clear"
-    },
-    "open": {
-      "windows": "start",
-      "linux": "xdg-open",
-      "darwin": "open"
-    },
-    "python": {
-      "windows": "py",
-      "linux": "python3",
-      "darwin": "python3"
-    },
-    "pip": {
-      "windows": "py -m pip",
-      "linux": "pip3",
-      "darwin": "pip3"
-    }
+    "ls": { "windows": "dir", "linux": "ls", "darwin": "ls" },
+    "ls -la": { "windows": "dir", "linux": "ls -la", "darwin": "ls -la" },
+
+    "cat": { "windows": "type", "linux": "cat", "darwin": "cat" },
+    "pwd": { "windows": "cd", "linux": "pwd", "darwin": "pwd" },
+
+    "rm": { "windows": "del", "linux": "rm", "darwin": "rm" },
+    "rm -rf": { "windows": "rmdir /s /q", "linux": "rm -rf", "darwin": "rm -rf" },
+
+    "cp": { "windows": "copy", "linux": "cp", "darwin": "cp" },
+    "cp -r": { "windows": "xcopy /E /I /Y", "linux": "cp -r", "darwin": "cp -r" },
+    "mv": { "windows": "move", "linux": "mv", "darwin": "mv" },
+
+    "mkdir": { "windows": "mkdir", "linux": "mkdir", "darwin": "mkdir" },
+    "mkdir -p": { "windows": "mkdir", "linux": "mkdir -p", "darwin": "mkdir -p" },
+    "rmdir": { "windows": "rmdir", "linux": "rmdir", "darwin": "rmdir" },
+
+    "touch": { "windows": "type nul >", "linux": "touch", "darwin": "touch" },
+    "which": { "windows": "where", "linux": "which", "darwin": "which" },
+    "clear": { "windows": "cls", "linux": "clear", "darwin": "clear" },
+
+    "grep": { "windows": "findstr", "linux": "grep", "darwin": "grep" },
+
+    "open": { "windows": "start", "linux": "xdg-open", "darwin": "open" },
+
+    "sleep": { "windows": "timeout /t", "linux": "sleep", "darwin": "sleep" },
+
+    "sudo": { "windows": "", "linux": "sudo", "darwin": "sudo" },
+
+    "python": { "windows": "py", "linux": "python3", "darwin": "python3" },
+    "pip": { "windows": "py -m pip", "linux": "pip3", "darwin": "pip3" }
   }
 }
