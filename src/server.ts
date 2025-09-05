@@ -226,13 +226,14 @@ function buildSuggestion(cmd: string, stderr: string, flavor: { bun: boolean; ya
   }
 
   // Python workflow hints
-  if (/\bpip\b/.test(lc)) {
+  if (/\bpip\b/.test(lc) || /\bpython\b/.test(lc)) {
     if (flavor.poetry) return "poetry install";
     if (flavor.pipenv) return "pipenv install";
     if (fssync.existsSync(path.join(cwd, "environment.yml"))) return "conda env update -f environment.yml";
     if (/no module named|modulenotfounderror/.test(err)) {
       if (fssync.existsSync(path.join(cwd, "requirements.txt"))) return "python -m pip install -r requirements.txt";
       if (fssync.existsSync(path.join(cwd, "pyproject.toml"))) return "python -m pip install .";
+      if (fssync.existsSync(path.join(cwd, ".venv")) || fssync.existsSync(path.join(cwd, "venv"))) return "Enable virtualenv activation via options.activateVenv='on'";
     }
   }
 
@@ -267,10 +268,17 @@ async function main() {
       inputSchema: {
         projectName: z.string().describe("Project name used to select overrides"),
         commandKey: z.string().describe("Logical command key, e.g. install, run, test"),
-        args: z.array(z.string()).optional().describe("Extra CLI args to append")
+        args: z.array(z.string()).optional().describe("Extra CLI args to append"),
+        options: z.object({
+          shell: z.enum(["auto", "cmd", "powershell", "bash"]).optional(),
+          activateVenv: z.enum(["auto", "on", "off"]).optional(),
+          venvPath: z.string().optional(),
+          cwd: z.string().optional(),
+          env: z.record(z.string()).optional()
+        }).optional()
       }
     },
-    async ({ projectName, commandKey, args }) => {
+    async ({ projectName, commandKey, args, options }) => {
       const os = getOS();
       const cmdMap = await loadJson<any>(COMMAND_MAP_PATH, { base: {} });
       const projectCmd = await resolveProjectCommand(projectName, commandKey);
@@ -286,16 +294,75 @@ async function main() {
       }
 
       const translated = translateCommandForOS(projectCmd, os, cmdMap);
-      const full = [translated, ...(args || []).map(quoteArg)].filter(Boolean).join(" ");
+      const fullBase = [translated, ...(args || []).map(quoteArg)].filter(Boolean).join(" ");
 
-      const run = await runShell(full);
+      const cwd = options?.cwd || process.cwd();
+      const selShell = (options?.shell || "auto") as "auto" | "cmd" | "powershell" | "bash";
+      const activatePref = (options?.activateVenv || "auto") as "auto" | "on" | "off";
+
+      function findVenv(base?: string) {
+        const candidates = base ? [base] : [".venv", "venv", "env"];
+        for (const c of candidates) {
+          const p = path.resolve(cwd, c);
+          if (!fssync.existsSync(p)) continue;
+          const posix = path.join(p, "bin", "activate");
+          const winCmd = path.join(p, "Scripts", "activate.bat");
+          const winPwsh = path.join(p, "Scripts", "Activate.ps1");
+          const out: any = { root: p };
+          if (fssync.existsSync(posix)) out.posix = posix;
+          if (fssync.existsSync(winCmd)) out.winCmd = winCmd;
+          if (fssync.existsSync(winPwsh)) out.winPwsh = winPwsh;
+          if (out.posix || out.winCmd || out.winPwsh) return out;
+        }
+        return undefined;
+      }
+
+      const venvInfo = findVenv(options?.venvPath);
+      const containsPy = /\b(python|pip|uvicorn|pytest|flask|django|poetry|pipenv)\b/i.test(fullBase);
+      const shouldActivate = activatePref === "on" || (activatePref === "auto" && !!venvInfo && containsPy);
+
+      function escapePwsh(s: string) {
+        return s.replace(/`/g, "``").replace(/"/g, "`\"");
+      }
+
+      let final = fullBase;
+      if (shouldActivate && venvInfo) {
+        if (os === "windows") {
+          if (selShell === "powershell") {
+            const act = venvInfo.winPwsh || venvInfo.winCmd;
+            if (act && venvInfo.winPwsh) {
+              final = `powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '${venvInfo.winPwsh.replace(/\\/g, "/")}'; ${escapePwsh(fullBase)} }"`;
+            } else if (act && venvInfo.winCmd) {
+              final = `call \"${venvInfo.winCmd}\" && ${fullBase}`;
+            } else {
+              final = `powershell -NoProfile -ExecutionPolicy Bypass -Command "${escapePwsh(fullBase)}"`;
+            }
+          } else {
+            if (venvInfo.winCmd) {
+              final = `call "${venvInfo.winCmd}" && ${fullBase}`;
+            }
+          }
+        } else {
+          if (venvInfo.posix) {
+            final = `. "${venvInfo.posix}" && ${fullBase}`;
+          }
+        }
+      } else {
+        if (os === "windows" && selShell === "powershell") {
+          final = `powershell -NoProfile -ExecutionPolicy Bypass -Command "${escapePwsh(fullBase)}"`;
+        } else if (os !== "windows" && selShell === "bash") {
+          final = `/bin/bash -lc ${quoteArg(fullBase)}`;
+        }
+      }
+
+      const run = await runShell(final);
       if (run.exitCode !== 0) {
         const suggestion = buildSuggestion(projectCmd, run.stderr, flavor, commandKey);
         const result = {
           errorCode: "COMMAND_FAILED",
           message: `Command failed with exit code ${run.exitCode}`,
           suggestion,
-          resolvedCommand: full,
+          resolvedCommand: final,
           stdout: run.stdout,
           stderr: run.stderr,
           exitCode: run.exitCode
@@ -307,7 +374,7 @@ async function main() {
         stdout: run.stdout,
         stderr: run.stderr,
         exitCode: run.exitCode,
-        resolvedCommand: full
+        resolvedCommand: final
       };
       return { content: [{ type: "text", text: JSON.stringify(output, null, 2) }] };
     }
