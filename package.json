@@ -19,22 +19,35 @@
     "README.md",
     "LICENSE"
   ],
-  "engines": { "node": ">=18" },
-  "keywords": ["mcp", "model-context-protocol", "command", "shell", "cross-platform"],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "command",
+    "shell",
+    "cross-platform"
+  ],
   "author": "Scrapybara",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mr-wolf-gb/smart-shell-mcp.git"
   },
-  "bugs": { "url": "https://github.com/mr-wolf-gb/smart-shell-mcp/issues" },
+  "bugs": {
+    "url": "https://github.com/mr-wolf-gb/smart-shell-mcp/issues"
+  },
   "homepage": "https://github.com/mr-wolf-gb/smart-shell-mcp#readme",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/node": "^24.3.1",
     "tsx": "^4.7.0",
     "typescript": "^5.6.3"
   }

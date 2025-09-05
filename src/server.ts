@@ -195,9 +195,9 @@ async function runShell(command: string): Promise<{ stdout: string; stderr: stri
     const child = spawn(command, { shell: true, windowsHide: true });
     let stdout = "";
     let stderr = "";
-    child.stdout.on("data", (d) => { stdout += d.toString(); });
-    child.stderr.on("data", (d) => { stderr += d.toString(); });
-    child.on("close", (code) => {
+    child.stdout.on("data", (d: Buffer) => { stdout += d.toString(); });
+    child.stderr.on("data", (d: Buffer) => { stderr += d.toString(); });
+    child.on("close", (code: number | null) => {
       resolve({ stdout, stderr, exitCode: code ?? 0 });
     });
   });
