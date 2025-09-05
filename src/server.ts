@@ -205,6 +205,10 @@ async function runShell(command: string): Promise<{ stdout: string; stderr: stri
 
 function buildSuggestion(cmd: string, stderr: string, flavor: { bun: boolean; yarn: boolean; pnpm: boolean; poetry: boolean; pipenv: boolean; }, key?: string): string | undefined {
   const lc = cmd.toLowerCase();
+  const err = (stderr || "").toLowerCase();
+  const cwd = process.cwd();
+
+  // Prefer package manager alternatives when npm is used
   if (lc.includes("npm ")) {
     if (flavor.bun) {
       if (key === "install") return "bun install";
@@ -212,18 +216,43 @@ function buildSuggestion(cmd: string, stderr: string, flavor: { bun: boolean; ya
       return cmd.replace(/\bnpm\b/g, "bun");
     }
     if (flavor.yarn) {
-      if (key === "install") return "yarn install";
+      if (key === "install") return fssync.existsSync(path.join(cwd, "yarn.lock")) ? "yarn install --frozen-lockfile" : "yarn install";
       return cmd.replace(/\bnpm run\b/g, "yarn");
     }
     if (flavor.pnpm) {
-      if (key === "install") return "pnpm install";
+      if (key === "install") return fssync.existsSync(path.join(cwd, "pnpm-lock.yaml")) ? "pnpm install --frozen-lockfile" : "pnpm install";
       return cmd.replace(/\bnpm run\b/g, "pnpm run");
     }
   }
+
+  // Python workflow hints
   if (/\bpip\b/.test(lc)) {
     if (flavor.poetry) return "poetry install";
     if (flavor.pipenv) return "pipenv install";
+    if (fssync.existsSync(path.join(cwd, "environment.yml"))) return "conda env update -f environment.yml";
+    if (/no module named|modulenotfounderror/.test(err)) {
+      if (fssync.existsSync(path.join(cwd, "requirements.txt"))) return "python -m pip install -r requirements.txt";
+      if (fssync.existsSync(path.join(cwd, "pyproject.toml"))) return "python -m pip install .";
+    }
   }
+
+  // Missing command
+  if (/command not found|is not recognized|spawn .* enoent/.test(err)) {
+    const primary = cmd.trim().split(/\s+/)[0];
+    return `"${primary}" not found. Install it or adjust mapping; e.g., ensure it's on PATH.`;
+  }
+
+  // Permissions
+  if (/permission denied|eacces|eperm/.test(err)) {
+    if (process.platform === 'win32') return "If a script was blocked, run: powershell Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass";
+    return "If this is a script, run: chmod +x <file> (or avoid sudo for npm).";
+  }
+
+  // Generic network/pip cache issues
+  if (/no matching distribution found|could not find a version that satisfies the requirement/.test(err)) {
+    return "Try: python -m pip install --upgrade pip setuptools wheel";
+  }
+
   return undefined;
 }
 
