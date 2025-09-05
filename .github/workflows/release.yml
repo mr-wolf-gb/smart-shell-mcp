@@ -9,6 +9,7 @@ on:
 jobs:
   publish:
     name: Publish to npm
+    environment: NPM
     runs-on: ubuntu-latest
     permissions:
       contents: read
