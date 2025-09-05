@@ -177,7 +177,7 @@ All examples assume stdio transport.
 
 After installing globally (`npm i -g smart-shell-mcp`), configure your IDE to run the `smart-shell` executable over stdio.
 
-- Cursor (example)
+- Cursor, Kiro, Windsurf (example)
 ```json
 {
   "mcpServers": {
@@ -186,24 +186,6 @@ After installing globally (`npm i -g smart-shell-mcp`), configure your IDE to ru
       "args": [],
       "env": {}
     }
-  }
-}
-```
-
-- Kiro (example)
-```json
-{
-  "servers": [
-    { "name": "smart-shell", "type": "stdio", "command": "smart-shell", "args": [] }
-  ]
-}
-```
-
-- Windsurf (example)
-```json
-{
-  "mcpServers": {
-    "smart-shell": { "command": "smart-shell", "args": [] }
   }
 }
 ```
