@@ -221,6 +221,8 @@ A release workflow is included. To publish:
    ```
 4. The `Release` workflow will build and publish with provenance: `npm publish --access public`.
 
+If you use an Environment named `NPM`, add `NPM_TOKEN` as an environment secret and the workflow will pick it up automatically (job declares `environment: NPM`). You can also store `NPM_TOKEN` as a repository secret instead.
+
 CLI name: `smart-shell` (installed globally provides a stdio MCP server entrypoint).
 
 ## License
