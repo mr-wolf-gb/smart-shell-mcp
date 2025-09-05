@@ -1,0 +1,69 @@
+{
+  "base": {
+    "ls": {
+      "windows": "dir",
+      "linux": "ls",
+      "darwin": "ls"
+    },
+    "cat": {
+      "windows": "type",
+      "linux": "cat",
+      "darwin": "cat"
+    },
+    "pwd": {
+      "windows": "cd",
+      "linux": "pwd",
+      "darwin": "pwd"
+    },
+    "rm": {
+      "windows": "del",
+      "linux": "rm",
+      "darwin": "rm"
+    },
+    "rm -rf": {
+      "windows": "rmdir /s /q",
+      "linux": "rm -rf",
+      "darwin": "rm -rf"
+    },
+    "cp": {
+      "windows": "copy",
+      "linux": "cp",
+      "darwin": "cp"
+    },
+    "mv": {
+      "windows": "move",
+      "linux": "mv",
+      "darwin": "mv"
+    },
+    "touch": {
+      "windows": "type nul >",
+      "linux": "touch",
+      "darwin": "touch"
+    },
+    "which": {
+      "windows": "where",
+      "linux": "which",
+      "darwin": "which"
+    },
+    "clear": {
+      "windows": "cls",
+      "linux": "clear",
+      "darwin": "clear"
+    },
+    "open": {
+      "windows": "start",
+      "linux": "xdg-open",
+      "darwin": "open"
+    },
+    "python": {
+      "windows": "py",
+      "linux": "python3",
+      "darwin": "python3"
+    },
+    "pip": {
+      "windows": "py -m pip",
+      "linux": "pip3",
+      "darwin": "pip3"
+    }
+  }
+}
