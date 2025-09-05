@@ -1,0 +1,19 @@
+{
+  "default": {
+    "install": "npm install",
+    "run": "npm start",
+    "test": "npm test",
+    "build": "npm run build"
+  },
+  "my-bun-project": {
+    "install": "bun install",
+    "run": "bun run dev",
+    "test": "bun test",
+    "build": "bun run build"
+  },
+  "python-api": {
+    "install": "pip install -r requirements.txt",
+    "run": "uvicorn app:app --reload",
+    "test": "pytest -q"
+  }
+}

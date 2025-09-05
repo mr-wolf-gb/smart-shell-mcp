@@ -1,0 +1,27 @@
+{
+  "name": "smart-shell-mcp",
+  "version": "0.1.0",
+  "description": "MCP Tool Server – Cross-Platform & Project-Aware Command Runner",
+  "type": "module",
+  "main": "dist/server.js",
+  "bin": {
+    "smart-shell": "dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": ["mcp", "model-context-protocol", "command", "shell", "cross-platform"],
+  "author": "Scrapybara",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.6.3"
+  }
+}
