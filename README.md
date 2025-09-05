@@ -1,6 +1,10 @@
 # smart-shell (MCP Server)
 
-[![CI](https://github.com/mr-wolf-gb/smart-shell-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/mr-wolf-gb/smart-shell-mcp/actions/workflows/ci.yml) [![npm version](https://img.shields.io/npm/v/smart-shell-mcp)](https://www.npmjs.com/package/smart-shell-mcp)
+[![npm version](https://img.shields.io/npm/v/smart-shell-mcp)](https://www.npmjs.com/package/smart-shell-mcp)
+[![CI](https://github.com/mr-wolf-gb/smart-shell-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/mr-wolf-gb/smart-shell-mcp/actions/workflows/ci.yml) 
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://opensource.org/licenses/GPL-3.0)
+[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io/)
 
 MCP Tool Server – Cross-Platform & Project-Aware Command Runner.
 
@@ -224,22 +228,4 @@ Notes
 - `npm start` – run compiled server
 - `npm run typecheck` – TypeScript type checking
 
-## Publishing (npm)
-
-A release workflow is included. To publish:
-
-1. Create an npm token with publish rights and add it as a repo secret named `NPM_TOKEN`.
-2. Bump the version in `package.json`.
-3. Create a tag and push it (format `vX.Y.Z`):
-   ```bash
-   git tag v0.1.0 && git push origin v0.1.0
-   ```
-4. The `Release` workflow will build and publish with provenance: `npm publish --access public`.
-
-If you use an Environment named `NPM`, add `NPM_TOKEN` as an environment secret and the workflow will pick it up automatically (job declares `environment: NPM`). You can also store `NPM_TOKEN` as a repository secret instead.
-
-CLI name: `smart-shell` (installed globally provides a stdio MCP server entrypoint).
-
-## License
-
-MIT © Scrapybara
+**Made with ❤️ by [Mr-Wolf-GB](https://github.com/mr-wolf-gb) for the MCP community**
