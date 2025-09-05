@@ -9,7 +9,6 @@ on:
 jobs:
   publish:
     name: Publish to npm
-    environment: NPM
     runs-on: ubuntu-latest
     environment: NPM
     permissions:
