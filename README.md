@@ -209,6 +209,20 @@ Note: Exact config locations vary by product and version. The key is to run the 
 - `npm start` – run compiled server
 - `npm run typecheck` – TypeScript type checking
 
+## Publishing (npm)
+
+A release workflow is included. To publish:
+
+1. Create an npm token with publish rights and add it as a repo secret named `NPM_TOKEN`.
+2. Bump the version in `package.json`.
+3. Create a tag and push it (format `vX.Y.Z`):
+   ```bash
+   git tag v0.1.0 && git push origin v0.1.0
+   ```
+4. The `Release` workflow will build and publish with provenance: `npm publish --access public`.
+
+CLI name: `smart-shell` (installed globally provides a stdio MCP server entrypoint).
+
 ## License
 
 MIT © Scrapybara

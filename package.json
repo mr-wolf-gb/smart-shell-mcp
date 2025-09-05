@@ -8,14 +8,28 @@
     "smart-shell": "dist/server.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "postbuild": "node scripts/copy-assets.mjs",
     "start": "node dist/server.js",
     "dev": "tsx src/server.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": { "node": ">=18" },
   "keywords": ["mcp", "model-context-protocol", "command", "shell", "cross-platform"],
   "author": "Scrapybara",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mr-wolf-gb/smart-shell-mcp.git"
+  },
+  "bugs": { "url": "https://github.com/mr-wolf-gb/smart-shell-mcp/issues" },
+  "homepage": "https://github.com/mr-wolf-gb/smart-shell-mcp#readme",
+  "publishConfig": { "access": "public" },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.5",
     "zod": "^3.23.8"
