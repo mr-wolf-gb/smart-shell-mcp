@@ -1,5 +1,7 @@
 # smart-shell (MCP Server)
 
+[![CI](https://github.com/mr-wolf-gb/smart-shell-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/mr-wolf-gb/smart-shell-mcp/actions/workflows/ci.yml) [![npm version](https://img.shields.io/npm/v/smart-shell-mcp)](https://www.npmjs.com/package/smart-shell-mcp)
+
 MCP Tool Server – Cross-Platform & Project-Aware Command Runner.
 
 This server exposes tools that execute shell commands in an OS-aware way and adapt to each project's preferred package/runtime manager (npm ↔ bun, pip ↔ poetry, etc.). Agents can read and modify per-project command mappings at runtime.
@@ -19,8 +21,13 @@ This server exposes tools that execute shell commands in an OS-aware way and ada
 ## Install
 
 ```bash
-# in this repo
+# Dev (inside this repo)
 npm install
+
+# Production (global CLI)
+npm install -g smart-shell-mcp
+# or per-project without global install
+npx smart-shell-mcp
 ```
 
 ## Run
@@ -76,8 +83,14 @@ Files are looked up in the current working directory first. If not found, the co
 
 ## Tools
 
-- `executeCommand({ projectName, commandKey, args? })`
+- `executeCommand({ projectName, commandKey, args?, options? })`
   - Resolve project override → fallback to `default` → translate for OS → run.
+  - `options` (all optional):
+    - `shell`: `auto | cmd | powershell | bash`
+    - `activateVenv`: `auto | on | off`
+    - `venvPath`: path to a venv root if not `.venv`/`venv`
+    - `cwd`: working directory for the command
+    - `env`: key/value environment overrides
   - Returns on success:
     ```json
     {
@@ -156,51 +169,53 @@ All examples assume stdio transport.
 }
 ```
 
-## IDE Integration Examples
+## IDE Integration (Production)
 
-The server runs over stdio. Configure your IDE/agent to launch the command below; examples vary by client version.
+After installing globally (`npm i -g smart-shell-mcp`), configure your IDE to run the `smart-shell` executable over stdio.
 
-- Claude Desktop (reference):
+- Cursor (example)
 ```json
 {
   "mcpServers": {
     "smart-shell": {
-      "command": "npx",
-      "args": ["tsx", "src/server.ts"],
+      "command": "smart-shell",
+      "args": [],
       "env": {}
     }
   }
 }
 ```
 
-- Cursor (conceptual):
-```json
-{
-  "mcpServers": {
-    "smart-shell": { "command": "npx", "args": ["tsx", "src/server.ts"] }
-  }
-}
-```
-
-- Kiro (conceptual):
+- Kiro (example)
 ```json
 {
   "servers": [
-    { "name": "smart-shell", "type": "stdio", "command": "node", "args": ["dist/server.js"] }
+    { "name": "smart-shell", "type": "stdio", "command": "smart-shell", "args": [] }
   ]
 }
 ```
 
-- Windsurf (conceptual):
+- Windsurf (example)
 ```json
 {
   "mcpServers": {
-    "smart-shell": { "command": "node", "args": ["dist/server.js"] }
+    "smart-shell": { "command": "smart-shell", "args": [] }
   }
 }
 ```
 
-Note: Exact config locations vary by product and version. The key is to run the server via stdio with the command shown in the Run section.
+- Claude Desktop (reference)
+```json
+{
+  "mcpServers": {
+    "smart-shell": { "command": "smart-shell" }
+  }
+}
+```
+
+Notes
+- If you prefer not to install globally, replace `smart-shell` with `npx smart-shell-mcp` in the examples above.
+- Windows users can switch to PowerShell execution with the tool options (see below) if needed.
 
 ## Project Scripts
 
