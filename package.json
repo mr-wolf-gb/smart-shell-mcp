@@ -1,6 +1,6 @@
 {
   "name": "smart-shell-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP Tool Server – Cross-Platform & Project-Aware Command Runner",
   "type": "module",
   "main": "dist/server.js",
