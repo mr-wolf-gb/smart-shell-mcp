@@ -182,6 +182,21 @@ After installing globally (`npm i -g smart-shell-mcp`), configure your IDE to ru
 {
   "mcpServers": {
     "smart-shell": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "smart-shell-mcp"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+Or
+```json
+{
+  "mcpServers": {
+    "smart-shell": {
       "command": "smart-shell",
       "args": [],
       "env": {}
